@@ -23,10 +23,11 @@ find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Bluetooth REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Bluetooth REQUIRED)
 
 set(PROJECT_SOURCES
-        bt_utils.cpp
-        main.cpp
-        main_window.cpp
-        main_window.h
+        src/bt_utils.cpp
+        src/bt_utils.h
+        src/main.cpp
+        src/main_window.cpp
+        src/main_window.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
