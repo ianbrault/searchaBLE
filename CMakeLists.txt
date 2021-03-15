@@ -29,6 +29,7 @@ set(PROJECT_SOURCES
         src/main_window.cpp
         src/main_window.h
 )
+qt5_add_resources(PROJECT_SOURCES resources.qrc)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(searchaBLE
