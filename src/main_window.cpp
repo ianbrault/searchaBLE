@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle("searchaBLE");
     setContentsMargins(20, 4, 20, 20);
     // TODO: this might need to be tuned
-    setMinimumSize(640, 400);
+    setMinimumSize(700, 400);
 
     auto device_table = new DeviceTableView(this);
     setCentralWidget(device_table);

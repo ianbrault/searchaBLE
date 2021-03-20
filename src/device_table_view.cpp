@@ -70,6 +70,11 @@ DeviceTableView::DeviceTableView(QWidget* parent)
     {
         setMinimumSize(parent->size());
     }
+    setSelectionBehavior(QAbstractItemView::SelectRows);
+    setSelectionMode(QAbstractItemView::SingleSelection);
+
+    // allow columns to be sorted
+    connect(horizontalHeader(), &QHeaderView::sortIndicatorChanged, this, &QTableWidget::sortItems);
 
     // initialize the device agent
     m_agent = std::make_unique<DeviceAgent>(Timeout);

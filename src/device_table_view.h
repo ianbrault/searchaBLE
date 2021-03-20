@@ -45,8 +45,7 @@ class DeviceTableView : public QTableWidget
     Q_OBJECT
 
     const int NColumns = 2;
-    // TODO: this should be controlled by a setting
-    const int Timeout = 3000;
+    const int Timeout = 3000;  // TODO: this should be controlled by a setting
     const int TimerInteral = 50;
 
     std::unique_ptr<DeviceAgent> m_agent;
