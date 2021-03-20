@@ -48,3 +48,33 @@ std::string address_to_string(const QBluetoothDeviceInfo& device)
 #endif
     return s;
 }
+
+QString device_discovery_error_into_string(QBluetoothDeviceDiscoveryAgent::Error&& error)
+{
+    QString s;
+
+    switch (error) {
+    case QBluetoothDeviceDiscoveryAgent::Error::NoError:
+        break;
+    case QBluetoothDeviceDiscoveryAgent::Error::PoweredOffError:
+        s = "The Bluetooth adaptor is powered off";
+        break;
+    case QBluetoothDeviceDiscoveryAgent::Error::InputOutputError:
+        s = "Error reading from or writing to the Bluetooth adaptor";
+        break;
+    case QBluetoothDeviceDiscoveryAgent::Error::InvalidBluetoothAdapterError:
+        s = "The Bluetooth adaptor is misconfigured";
+        break;
+    case QBluetoothDeviceDiscoveryAgent::Error::UnsupportedPlatformError:
+        s = "Bluetooth is not supported on this platform";
+        break;
+    case QBluetoothDeviceDiscoveryAgent::Error::UnsupportedDiscoveryMethod:
+        s = "Bluetooth Low Energy is not supported on this platform";
+        break;
+    case QBluetoothDeviceDiscoveryAgent::Error::UnknownError:
+        s = "An unknown error occurred";
+        break;
+    };
+
+    return s;
+}

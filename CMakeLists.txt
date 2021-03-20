@@ -24,10 +24,10 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Bluetooth REQUIRED)
 
 set(PROJECT_SOURCES
         src/bt_utils.cpp
-        src/bt_utils.h
+        src/device_agent.cpp
+        src/device_table_view.cpp
         src/main.cpp
         src/main_window.cpp
-        src/main_window.h
 )
 qt5_add_resources(PROJECT_SOURCES resources.qrc)
 

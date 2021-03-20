@@ -19,8 +19,14 @@
 #ifndef BTUTILS_H
 #define BTUTILS_H
 
+#include <QBluetoothDeviceDiscoveryAgent>
 #include <QBluetoothDeviceInfo>
 
+// maps device address to info in order to filter out duplicates
+typedef std::map<std::string, QBluetoothDeviceInfo> device_map_t;
+
 std::string address_to_string(const QBluetoothDeviceInfo& device);
+
+QString device_discovery_error_into_string(QBluetoothDeviceDiscoveryAgent::Error&& error);
 
 #endif // BTUTILS_H

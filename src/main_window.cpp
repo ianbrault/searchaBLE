@@ -1,4 +1,4 @@
-/*
+ /*
 **    searchaBLE
 **    Copyright (C) 2021  Ian Brault
 **
@@ -16,10 +16,17 @@
 **    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include "device_table_view.h"
 #include "main_window.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    setStyleSheet("background-color: white");
+    setWindowTitle("searchaBLE");
+    setContentsMargins(20, 4, 20, 20);
+    // TODO: this might need to be tuned
+    setMinimumSize(640, 400);
+
+    auto device_table = new DeviceTableView(this);
+    setCentralWidget(device_table);
 }

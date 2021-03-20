@@ -19,10 +19,16 @@
 #include "main_window.h"
 
 #include <QApplication>
+#include <QFontDatabase>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    // add fonts to database
+    QFontDatabase::addApplicationFont(":/fonts/SF-Pro-Display-Light.otf");
+    QFontDatabase::addApplicationFont(":/fonts/SF-Pro-Display-Regular.otf");
+    QFontDatabase::addApplicationFont(":/fonts/SF-Pro-Display-Thin.otf");
 
     MainWindow w;
     w.show();

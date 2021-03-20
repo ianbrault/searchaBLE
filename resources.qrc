@@ -1,5 +1,8 @@
-<!DOCTYPE RCC><RCC version="1.0">
-    <qresource>
+<RCC>
+    <qresource prefix="/">
         <file>images/logo.main.png</file>
+        <file>fonts/SF-Pro-Display-Light.otf</file>
+        <file>fonts/SF-Pro-Display-Regular.otf</file>
+        <file>fonts/SF-Pro-Display-Thin.otf</file>
     </qresource>
 </RCC>
