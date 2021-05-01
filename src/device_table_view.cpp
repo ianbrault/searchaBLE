@@ -132,6 +132,9 @@ void DeviceTableView::set_devices(const device_map_t& devices)
 {
     m_timer->stop();
 
+    // hold onto the device_map_t, we will need the QBluetoothDeviceInfo later
+    m_devices = std::make_shared<device_map_t>(devices);
+
     if (devices.empty())
     {
         clear_table();
@@ -187,4 +190,22 @@ void DeviceTableView::search_error(QString error)
 
     // clear the table
     clear_table();
+}
+
+QBluetoothDeviceInfo DeviceTableView::selected_device() const
+{
+    QBluetoothDeviceInfo device;
+
+    foreach(auto* item, selectedItems())
+    {
+        // check for the selected item in the "address" column
+        // only 1 row can be selected at a time
+        if (item->column() == 1)
+        {
+            auto address = item->text();
+            device = m_devices->at(address.toStdString());
+        }
+    }
+
+    return device;
 }

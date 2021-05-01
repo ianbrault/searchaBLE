@@ -16,22 +16,24 @@
 **    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef BTUTILS_H
-#define BTUTILS_H
+#include "service_tree_model.h"
+#include "service_tree_view.h"
 
-#include <QBluetoothDeviceDiscoveryAgent>
-#include <QBluetoothDeviceInfo>
-#include <QBluetoothUuid>
-#include <QLowEnergyController>
+#include <QHeaderView>
 
-// maps device address to info in order to filter out duplicates
-typedef std::map<std::string, QBluetoothDeviceInfo> device_map_t;
+ServiceTreeView::ServiceTreeView(QWidget* parent)
+    : QTreeView(parent)
+{
+    m_model = new ServiceTreeModel(this);
+    setModel(m_model);
 
-std::string uuid_to_string(const QBluetoothUuid& uuid);
-std::string address_to_string(const QBluetoothDeviceInfo& device);
+    setStyleSheet("QTreeView { border: None; } QTreeView::item { padding: 4px; }");
 
-QString device_discovery_error_into_string(QBluetoothDeviceDiscoveryAgent::Error&& error);
+    header()->setSectionResizeMode(QHeaderView::Fixed);
+    header()->setStyleSheet("QHeaderView::section{ padding: 0 0 4px 0; }");
+}
 
-QString controller_error_into_string(QLowEnergyController::Error&& error);
-
-#endif // BTUTILS_H
+void ServiceTreeView::set_services(const std::vector<std::unique_ptr<QLowEnergyService>>& services)
+{
+    m_model->set_services(services);
+}

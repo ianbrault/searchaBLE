@@ -16,39 +16,27 @@
 **    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
+#include "service_tree_view.h"
 #include "service_view.h"
 
-#include <QBluetoothDeviceInfo>
-#include <QLowEnergyController>
-#include <QLowEnergyService>
-#include <QMainWindow>
+#include <QHBoxLayout>
 
-class DeviceTableView;
-class QPushButton;
-
-class MainWindow : public QMainWindow
+ServiceView::ServiceView()
+    : QWidget() // this should always be a floating window, hence no parent
 {
-    Q_OBJECT
+    m_service_tree = new ServiceTreeView(this);
 
-    DeviceTableView* m_device_table;
-    QPushButton* m_connect_button;
+    auto layout = new QHBoxLayout();
+    layout->addWidget(m_service_tree);
+    setLayout(layout);
+}
 
-    std::unique_ptr<QLowEnergyController> m_controller;
-    std::unique_ptr<ServiceView> m_service_window;
-    std::vector<std::unique_ptr<QLowEnergyService>> m_services;
+void ServiceView::set_window_title(QString title)
+{
+    setWindowTitle(title);
+}
 
-public:
-    MainWindow(QWidget *parent = nullptr);
-
-private:
-    void initialize_controller();
-    void connect_to_device(const QBluetoothDeviceInfo& device);
-
-protected slots:
-    void device_selection_changed();
-};
-
-#endif // MAINWINDOW_H
+void ServiceView::set_services(const std::vector<std::unique_ptr<QLowEnergyService>>& services)
+{
+    m_service_tree->set_services(services);
+}

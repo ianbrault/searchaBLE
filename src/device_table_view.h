@@ -46,9 +46,11 @@ class DeviceTableView : public QTableWidget
 
     const int NColumns = 2;
     const int Timeout = 3000;  // TODO: this should be controlled by a setting
-    const int TimerInteral = 50;
+    const int TimerInteral = 20;
 
     std::unique_ptr<DeviceAgent> m_agent;
+    std::shared_ptr<device_map_t> m_devices;
+
     Placeholder* m_placeholder;
     QProgressBar* m_progress;
     QTimer* m_timer;
@@ -56,6 +58,7 @@ class DeviceTableView : public QTableWidget
 public:
     DeviceTableView(QWidget* parent = nullptr);
     void set_devices(const device_map_t& devices);
+    QBluetoothDeviceInfo selected_device() const;
 
 protected:
     void resizeEvent(QResizeEvent *event);

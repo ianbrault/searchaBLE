@@ -28,6 +28,10 @@ set(PROJECT_SOURCES
         src/device_table_view.cpp
         src/main.cpp
         src/main_window.cpp
+        src/service_tree_item.cpp
+        src/service_tree_model.cpp
+        src/service_tree_view.cpp
+        src/service_view.cpp
 )
 qt5_add_resources(PROJECT_SOURCES resources.qrc)
 
