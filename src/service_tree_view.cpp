@@ -38,4 +38,5 @@ ServiceTreeView::ServiceTreeView(QWidget* parent)
 void ServiceTreeView::set_services(const std::vector<std::unique_ptr<QLowEnergyService>>& services)
 {
     m_model->set_services(services);
+    update();
 }

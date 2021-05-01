@@ -59,49 +59,7 @@ MainWindow::MainWindow(QWidget *parent)
     dock->setWidget(button_wrapper);
     addDockWidget(Qt::BottomDockWidgetArea, dock);
 
-    // initialize the device service/characteristic window
-    m_service_window = std::make_unique<ServiceView>();
-    m_service_window->hide();
-
     setCentralWidget(m_device_table);
-}
-
-void MainWindow::initialize_controller()
-{
-    // open the service window once the service scan is complete
-    connect(m_controller.get(), &QLowEnergyController::discoveryFinished, [&]() {
-        qDebug() << "service discovery complete";
-        m_service_window->set_services(m_services);
-        m_service_window->show();
-    });
-
-    // close the service window when disconnected from the device
-    connect(m_controller.get(), &QLowEnergyController::disconnected, []() {
-        qDebug() << "controller disconnected from device";
-        // FIXME: implement this
-    });
-
-    // search for services once connected to the device
-    connect(m_controller.get(), &QLowEnergyController::connected, [&]() {
-        qDebug() << "controller connected to device, searching for services";
-        m_controller->discoverServices();
-    });
-
-    // track discovered services
-    connect(m_controller.get(), &QLowEnergyController::serviceDiscovered, [&](auto uuid) {
-        qDebug() << "discovered service" << uuid_to_string(uuid).c_str();
-        auto service = m_controller->createServiceObject(uuid);
-        m_services.emplace_back(service);
-    });
-
-    // show a dialog on error
-    connect(m_controller.get(), static_cast<void (QLowEnergyController::*)(QLowEnergyController::Error)>(&QLowEnergyController::error), [](QLowEnergyController::Error error) {
-        QMessageBox alert;
-        alert.setIcon(QMessageBox::Warning);
-        alert.setText("An error occurred while connecting to the device");
-        alert.setInformativeText(controller_error_into_string(std::move(error)));
-        alert.exec();
-    });
 }
 
 void MainWindow::device_selection_changed()
@@ -116,18 +74,67 @@ void MainWindow::device_selection_changed()
 
 void MainWindow::connect_to_device(const QBluetoothDeviceInfo& device)
 {
-    qDebug() << "connecting to device, name =" << device.name();
+    qDebug() << "connecting to device " << device.name();
 
-    // set the window title while we have the device in scope
-    auto title = device.name().isEmpty() ? "UNNAMED DEVICE" : device.name();
-    m_service_window->set_window_title(title);
+    // clear any previously-discovered services
+    m_services.clear();
 
     // initialize the BLE controller with the device
     m_controller = std::unique_ptr<QLowEnergyController>(QLowEnergyController::createCentral(device));
     initialize_controller();
 
-    // clear any previously-discovered services
-    m_services.clear();
+    // create the service window
+    m_service_window = std::make_unique<ServiceView>();
+
+    // set the window title while we have the device in scope
+    auto title = device.name().isEmpty() ? "UNNAMED DEVICE" : device.name();
+    m_service_window->set_window_title(title);
+
+    // show the window while connecting to the device
+    m_service_window->show();
 
     m_controller->connectToDevice();
+}
+
+
+void MainWindow::initialize_controller()
+{
+    // add services to the service window once the scan is complete
+    connect(m_controller.get(), &QLowEnergyController::discoveryFinished, [this]() {
+        qDebug() << "service discovery complete";
+        m_service_window->set_services(m_services);
+    });
+
+    // close the service window when disconnected from the device
+    connect(m_controller.get(), &QLowEnergyController::disconnected, [this]() {
+        qDebug() << "controller disconnected from device";
+        m_service_window.reset();
+        m_controller.reset();
+    });
+
+    // search for services once connected to the device
+    connect(m_controller.get(), &QLowEnergyController::connected, [this]() {
+        qDebug() << "controller connected to device, searching for services";
+        m_controller->discoverServices();
+    });
+
+    // track discovered services
+    connect(m_controller.get(), &QLowEnergyController::serviceDiscovered, [this](auto uuid) {
+        qDebug() << "discovered service" << uuid_to_string(uuid).c_str();
+        auto service = m_controller->createServiceObject(uuid);
+        m_services.emplace_back(service);
+    });
+
+    // show a dialog on error
+    connect(m_controller.get(), static_cast<void (QLowEnergyController::*)(QLowEnergyController::Error)>(&QLowEnergyController::error), [this](QLowEnergyController::Error error) {
+        QMessageBox alert;
+        alert.setIcon(QMessageBox::Warning);
+        alert.setText("An error occurred while connecting to the device");
+        alert.setInformativeText(controller_error_into_string(std::move(error)));
+        alert.exec();
+        // also delete the service window and controller
+        m_service_window.reset();
+        m_controller->disconnectFromDevice();
+        m_controller.reset();
+    });
 }

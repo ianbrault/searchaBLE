@@ -32,6 +32,7 @@ set(PROJECT_SOURCES
         src/service_tree_model.cpp
         src/service_tree_view.cpp
         src/service_view.cpp
+        src/spinner.cpp
 )
 qt5_add_resources(PROJECT_SOURCES resources.qrc)
 

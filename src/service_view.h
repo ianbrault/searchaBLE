@@ -23,11 +23,13 @@
 #include <QWidget>
 
 class ServiceTreeView;
+class Spinner;
 
 class ServiceView : public QWidget
 {
     Q_OBJECT
 
+    Spinner* m_spinner;
     ServiceTreeView* m_service_tree;
 
 public:
