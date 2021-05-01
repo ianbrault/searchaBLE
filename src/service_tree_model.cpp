@@ -25,7 +25,7 @@
 ServiceTreeModel::ServiceTreeModel(QObject* parent)
     : QAbstractItemModel(parent)
 {
-    root = new ServiceTreeItem("Service/Characteristic UUID");
+    root = new ServiceTreeItem("Service/Characteristic Name", "Service/Characteristic UUID");
 }
 
 ServiceTreeModel::~ServiceTreeModel()
@@ -42,7 +42,7 @@ void ServiceTreeModel::set_services(const std::vector<std::unique_ptr<QLowEnergy
     {
         // add an item to the root for each service
         qDebug() << "adding service" << uuid_to_string(service->serviceUuid()).c_str() << "to model";
-        auto service_item = new ServiceTreeItem(service->serviceUuid(), root);
+        auto service_item = new ServiceTreeItem(service->serviceUuid(), service->serviceName(), root);
         root->append_child(service_item);
 
         // add characteristics as children of the service
@@ -50,14 +50,14 @@ void ServiceTreeModel::set_services(const std::vector<std::unique_ptr<QLowEnergy
         {
             qDebug() << "for service" << uuid_to_string(service->serviceUuid()).c_str()
                      << "adding characteristic" << uuid_to_string(characteristic.uuid()).c_str() << "to model";
-            auto char_item = new ServiceTreeItem(characteristic.uuid(), service_item);
+            auto char_item = new ServiceTreeItem(characteristic.uuid(), characteristic.name(), service_item);
             service_item->append_child(char_item);
         }
 
         // if there are no characteristics, add a blank item
         if (service_item->child_count() == 0)
         {
-            auto filler = new ServiceTreeItem({}, service_item);
+            auto filler = new ServiceTreeItem({}, "", service_item);
             service_item->append_child(filler);
         }
     }
@@ -102,8 +102,7 @@ int ServiceTreeModel::rowCount(const QModelIndex& parent) const
 
 int ServiceTreeModel::columnCount(const QModelIndex&) const
 {
-    // NOTE: just the UUID for now
-    return 1;
+    return 2;
 }
 
 QVariant ServiceTreeModel::data(const QModelIndex& index, int role) const

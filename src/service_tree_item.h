@@ -27,13 +27,15 @@ class ServiceTreeItem
     ServiceTreeItem* m_parent;
     std::vector<ServiceTreeItem*> m_children;
     QBluetoothUuid m_uuid;
+    QString m_name;
     // only used for the root item
-    QString m_label;
+    QString m_col_0;
+    QString m_col_1;
 
 public:
-    ServiceTreeItem(const QBluetoothUuid& uuid, ServiceTreeItem *parent = nullptr);
+    ServiceTreeItem(const QBluetoothUuid& uuid, const QString& name, ServiceTreeItem *parent = nullptr);
     // this constructor should be used for the root
-    ServiceTreeItem(QString label);
+    ServiceTreeItem(QString col_0, QString col_1);
     ~ServiceTreeItem();
 
     void append_child(ServiceTreeItem* child);

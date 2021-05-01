@@ -21,14 +21,14 @@
 
 #include <algorithm>
 
-ServiceTreeItem::ServiceTreeItem(const QBluetoothUuid& uuid, ServiceTreeItem* parent)
-    : m_parent(parent), m_uuid(uuid)
+ServiceTreeItem::ServiceTreeItem(const QBluetoothUuid& uuid, const QString& name, ServiceTreeItem* parent)
+    : m_parent(parent), m_uuid(uuid), m_name(name)
 {
 
 }
 
-ServiceTreeItem::ServiceTreeItem(QString label)
-    : m_parent(nullptr), m_label(label)
+ServiceTreeItem::ServiceTreeItem(QString col_0, QString col_1)
+    : m_parent(nullptr), m_col_0(col_0), m_col_1(col_1)
 {
 
 }
@@ -82,19 +82,27 @@ QVariant ServiceTreeItem::data(int column) const
 {
     if (column == 0)
     {
-        if (!m_label.isEmpty())
+        if (!m_col_0.isEmpty())
         {
-            return m_label;
+            return m_col_0;
+        }
+        else
+        {
+            return m_name;
+        }
+    }
+    else if (column == 1)
+    {
+        if (!m_col_1.isEmpty())
+        {
+            return m_col_1;
         }
         else
         {
             return QString::fromStdString(uuid_to_string(m_uuid));
         }
     }
-    else
-    {
-        return QVariant();
-    }
+    return QVariant();
 }
 
 QBluetoothUuid ServiceTreeItem::uuid() const
@@ -122,6 +130,5 @@ int ServiceTreeItem::child_count() const
 
 int ServiceTreeItem::column_count() const
 {
-    // NOTE: just the UUID for now
-    return 1;
+    return 2;
 }

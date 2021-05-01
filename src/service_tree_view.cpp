@@ -27,10 +27,12 @@ ServiceTreeView::ServiceTreeView(QWidget* parent)
     m_model = new ServiceTreeModel(this);
     setModel(m_model);
 
+    setMinimumSize(540, 320);
     setStyleSheet("QTreeView { border: None; } QTreeView::item { padding: 4px; }");
 
-    header()->setSectionResizeMode(QHeaderView::Fixed);
-    header()->setStyleSheet("QHeaderView::section{ padding: 0 0 4px 0; }");
+    header()->setDefaultSectionSize(200);
+    header()->setStretchLastSection(true);
+    header()->setStyleSheet("QHeaderView::section { padding: 0 8px 4px 8px; }");
 }
 
 void ServiceTreeView::set_services(const std::vector<std::unique_ptr<QLowEnergyService>>& services)
